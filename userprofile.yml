@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userprofile
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userprofile
+  template:
+    metadata:
+      labels:
+        app: userprofile
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - name: userprofile
+        image: registrywpv6651.azurecr.io/userprofile:azure
+        
+        env:
+          - name: SQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: mysecret
+                key: SQL_USER
+
+          - name: SQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysecret
+                key: SQL_PASSWORD
+
+            
+          - name: SQL_SERVER
+            valueFrom:
+              secretKeyRef:
+                name: mysecret
+                key: SQL_SERVER
+
+          - name: SQL_DBNAME
+            valueFrom:
+              secretKeyRef:
+                name: mysecret
+                key: SQL_DBNAME
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+          name: userpro-port
