@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: api-group-api-admin-binding
+  namespace: api
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: api-admin
+subjects:
+- kind: Group
+  namespace: api
+  name: 291ff220-7d11-492b-929b-36c5fe1cf861

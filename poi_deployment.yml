@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poi
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poi
+  template:
+    metadata:
+      labels:
+        app: poi
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - name: poi
+        image: registrywpv6651.azurecr.io/poi:azure
+
+        env:
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: SQL_USER
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: SQL_PASSWORD
+        - name: SQL_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: SQL_SERVER
+        - name: SQL_DBNAME
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: SQL_DBNAME
+              
+
+
+        # env:
+        # - name: SQL_USER
+        #   value: "sqladminwPv6651"
+        # - name: SQL_PASSWORD
+        #   value: "aC6tz7Gb2"
+        # - name: SQL_SERVER
+        #   value: "sqlserverwpv6651.database.windows.net"
+        # - name: SQL_DBNAME
+        #   value: "mydrivingDB"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+          name: poi-port
